@@ -1,3 +1,17 @@
 .claude
 external
 CLAUDE.md
+REPO_STATE.md
+
+# Python / backend
+backend/venv/
+venv/
+__pycache__/
+*.pyc
+.env
+*.db
+backend/data/vector_store/
+
+# Node / frontend (frontend/.gitignore also covers these)
+node_modules/
+dist/

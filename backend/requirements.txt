@@ -1,0 +1,16 @@
+# Phase 1 dependencies (Plan.md §1 stack). Versions unpinned; pin via `pip freeze` after install.
+fastapi
+uvicorn
+python-multipart
+sqlalchemy
+pydantic-settings
+python-jose
+passlib
+chromadb
+sentence-transformers
+python-docx
+openpyxl
+python-pptx
+pymupdf
+pytesseract
+pillow

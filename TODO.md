@@ -1,0 +1,83 @@
+# TODO
+
+## Phase 1 — Setup Repository and Tools
+- [x] Create root repo skeleton: `backend/`, `frontend/`, `.env.example`, `docker-compose.yml`
+- [x] `git init`; create `backend/` and `frontend/` folders
+- [x] Backend: create `requirements.txt` with Phase 1 dependencies
+- [x] Frontend: `npm create vite` (React), `npm install`, add axios/tailwindcss/postcss/autoprefixer/react-router-dom, `npx tailwindcss init -p`
+- [x] Verify: `npm run build` succeeds (frontend toolchain)
+
+## Phase 2 — Backend Foundation
+- [x] Create `backend/app/main.py` (FastAPI instance)
+- [x] Add CORS middleware allowing only localhost frontend origin
+- [x] Add `/health` endpoint returning `{"status": "ok"}`
+- [x] Create `backend/app/core/config.py`
+- [x] Verify: `GET /health` returns 200 + CORS allows only `localhost:5173` (via ASGI TestClient)
+
+## Phase 3 — Database Models
+- [x] Create `backend/app/db/database.py` (engine, session, `init_db`)
+- [x] Create `backend/app/models/db_models.py` (ORM models)
+- [x] Define `users` table
+- [x] Define `documents` table
+- [x] Define `knowledge_chunks` table
+- [x] Define `equipment` table (§4.3 knowledge layer)
+- [x] Define `equipment_links` table (§4.3 knowledge layer)
+- [x] Define `agent_runs` table
+- [x] Define `approval_requests` table
+- [x] Define `sovereignty_log` table
+- [x] Verify: running app auto-creates `app.db` with all 8 tables
+
+## Phase 4 — Core APIs
+- [ ] `POST /auth/login`
+- [ ] `POST /documents/upload`
+- [ ] `POST /agent/run`
+- [ ] `GET /agent/run/{id}/status`
+- [ ] `POST /approval/{id}/decide`
+- [ ] `GET /sovereignty/status`
+- [ ] Verify: every endpoint testable via `/docs`
+
+## Phase 5 — Frontend Pages
+- [ ] Login page
+- [ ] Workbench page (chat box + file upload + response area)
+- [ ] Evidence/citations panel
+- [ ] Approval modal (Approve/Reject)
+- [ ] Sovereignty Dashboard page
+- [ ] Verify: all pages render with mock/static data
+
+## Phase 6 — Connect Frontend with Backend
+- [ ] Replace mock data with real axios calls to backend endpoints
+- [ ] Verify: upload a real PDF, see it in documents list from DB
+
+## Phase 7 — Add AI/Intelligent Features
+- [ ] 7.1 Model serving — install Ollama, pull `llama3.1:8b`, `qwen2.5-coder:7b`, `llava:7b`
+- [ ] 7.2 Task Classifier (`agent/task_classifier.py`)
+- [ ] 7.3 Model Router (`agent/model_router.py`)
+- [ ] 7.4 RAG pipeline — `rag/ingest.py`, `rag/embed.py`, `rag/retrieve.py`
+- [ ] 7.5 Tools — `sandbox_tool.py`, `docgen_tool.py`, `file_tools.py`
+- [ ] 7.6 Agent Planner (`agent/planner.py`)
+- [ ] Verify: model routing logs show reasoning model + sandbox execution firing
+
+## Phase 8 — Dashboards and Analytics
+- [ ] Create `core/network_guard.py` middleware (intercept + log outbound attempts; block non-localhost)
+- [ ] Build Sovereignty Dashboard from `sovereignty_log` + `agent_runs`
+- [ ] Verify: disconnect internet, run full flagship demo end-to-end
+
+## Phase 9 — Testing and Debugging
+- [ ] Unit tests for `task_classifier`, `model_router`, `retrieve.py`
+- [ ] Manual end-to-end test script for flagship workflow
+- [ ] Edge-case tests: corrupted PDF, empty document, ambiguous task type, sandbox timeout
+- [ ] Verify: all tests pass; flagship demo runs 3× consecutively
+
+## Phase 10 — Deployment
+- [ ] Write `docker-compose.yml` (services: `backend`, `frontend`, `ollama`, `chromadb`)
+- [ ] `docker compose up --build`
+- [ ] Verify: fresh machine runs the whole stack with one command
+
+## Phase 11 — SIH Presentation and Demo Preparation
+- [ ] Slide deck: problem → solution → architecture → live demo → impact metrics
+- [ ] Judge script: "Disconnect the internet. It still works." moment
+- [ ] Pre-recorded backup video of full demo
+- [ ] One-page architecture diagram
+- [ ] Rehearsed Q&A answers
+- [ ] Metrics table: manual vs AI-assisted time
+- [ ] Verify: full run-through rehearsed ≥2×, timed under demo slot

@@ -1,0 +1,16 @@
+# Skeleton only — services are fully wired in Phase 10 (Deployment).
+# Present here so the repo layout matches Plan.md §2. `docker compose up` is NOT
+# expected to work until Phase 10 adds Dockerfiles, ports, volumes, and commands.
+services:
+  backend:
+    build: ./backend
+    # command / ports / volumes / env_file added in Phase 10
+
+  frontend:
+    build: ./frontend
+    # ports added in Phase 10
+
+  ollama:
+    image: ollama/ollama
+    # volumes / ports added in Phase 10
+    # ChromaDB runs embedded in the backend for the MVP (no separate service).
