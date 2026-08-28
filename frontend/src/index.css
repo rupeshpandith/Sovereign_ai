@@ -2,114 +2,225 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+  Sovereign AI Workbench — industrial control-room theme.
+  All fonts/assets are local; no external font or CDN requests (sovereignty constraint).
+*/
+
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  color-scheme: dark;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+* {
+  box-sizing: border-box;
+}
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+html,
+body,
+#root {
+  height: 100%;
 }
 
 body {
   margin: 0;
+  background-color: #0e1219;
+  color: #dce3ed;
+  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Faint control-room grid backdrop — ambient, sits behind all content. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(55, 194, 201, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(55, 194, 201, 0.028) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index: 0;
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
+@layer components {
+  .mono {
+    font-family: 'JetBrains Mono', 'Cascadia Code', 'SF Mono', Consolas, ui-monospace, monospace;
+  }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+  .panel {
+    background-color: #151b24;
+    border: 1px solid #273041;
+    border-radius: 6px;
+  }
+
+  /* Status LEDs — the signature control-room element. */
+  .led {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background-color: #5b7089;
+    flex: none;
+  }
+  .led-nominal {
+    background-color: #45b36b;
+    box-shadow: 0 0 6px 0 rgba(69, 179, 107, 0.85);
+  }
+  .led-caution {
+    background-color: #e0a63c;
+    box-shadow: 0 0 6px 0 rgba(224, 166, 60, 0.85);
+  }
+  .led-trip {
+    background-color: #e5484d;
+    box-shadow: 0 0 6px 0 rgba(229, 72, 77, 0.85);
+    animation: led-pulse 1.2s ease-in-out infinite;
+  }
+  .led-accent {
+    background-color: #37c2c9;
+    box-shadow: 0 0 6px 0 rgba(55, 194, 201, 0.85);
+  }
+  .led-active {
+    background-color: #37c2c9;
+    box-shadow: 0 0 6px 0 rgba(55, 194, 201, 0.85);
+    animation: led-pulse 1.2s ease-in-out infinite;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', 'Cascadia Code', 'SF Mono', Consolas, ui-monospace, monospace;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background-color: #1b222d;
+    border: 1px solid #273041;
+    color: #dce3ed;
+    white-space: nowrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 16px;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    background-color: #37c2c9;
+    color: #06171a;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background-color: #4ad3da;
+  }
+  .btn-ghost {
+    background-color: transparent;
+    border-color: #273041;
+    color: #dce3ed;
+  }
+  .btn-ghost:hover:not(:disabled) {
+    border-color: #37c2c9;
+    color: #37c2c9;
+  }
+  .btn-approve {
+    background-color: #45b36b;
+    color: #05160c;
+  }
+  .btn-approve:hover:not(:disabled) {
+    background-color: #57c47d;
+  }
+  .btn-reject {
+    background-color: transparent;
+    border-color: #e5484d;
+    color: #e5484d;
+  }
+  .btn-reject:hover:not(:disabled) {
+    background-color: rgba(229, 72, 77, 0.12);
+  }
+
+  .input {
+    width: 100%;
+    background-color: #10151d;
+    border: 1px solid #273041;
+    border-radius: 5px;
+    color: #dce3ed;
+    padding: 9px 12px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  .input::placeholder {
+    color: #5b7089;
+  }
+  .input:focus {
+    outline: none;
+    border-color: #37c2c9;
+    box-shadow: 0 0 0 3px rgba(55, 194, 201, 0.15);
+  }
+
+  .field-label {
+    display: block;
+    font-family: 'JetBrains Mono', 'Cascadia Code', 'SF Mono', Consolas, ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #7e8a9c;
+    margin-bottom: 6px;
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', 'Cascadia Code', 'SF Mono', Consolas, ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7e8a9c;
   }
 }
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
+
+/* Keyboard focus visibility (quality floor). */
+:focus-visible {
+  outline: 2px solid #37c2c9;
+  outline-offset: 2px;
+}
+
+@keyframes led-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
   }
 }
-p {
-  margin: 0;
-}
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

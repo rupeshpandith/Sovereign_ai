@@ -28,25 +28,35 @@
 - [x] Verify: running app auto-creates `app.db` with all 8 tables
 
 ## Phase 4 — Core APIs
-- [ ] `POST /auth/login`
-- [ ] `POST /documents/upload`
-- [ ] `POST /agent/run`
-- [ ] `GET /agent/run/{id}/status`
-- [ ] `POST /approval/{id}/decide`
-- [ ] `GET /sovereignty/status`
-- [ ] Verify: every endpoint testable via `/docs`
+- [x] `POST /auth/login`
+- [x] `POST /documents/upload`
+- [x] `POST /agent/run`
+- [x] `GET /agent/run/{id}/status`
+- [x] `POST /approval/{id}/decide`
+- [x] `GET /sovereignty/status`
+- [x] Verify: every endpoint testable via `/docs`
 
 ## Phase 5 — Frontend Pages
-- [ ] Login page
-- [ ] Workbench page (chat box + file upload + response area)
-- [ ] Evidence/citations panel
-- [ ] Approval modal (Approve/Reject)
-- [ ] Sovereignty Dashboard page
-- [ ] Verify: all pages render with mock/static data
+- [x] Login page (secure-terminal; demo-role quick-fill chips)
+- [x] Workbench page (goal box + file upload + documents list + run-steps rail + evidence)
+- [x] Evidence/citations panel (sourced / low-confidence / unsourced-reasoning states, §9/§16)
+- [x] Approval modal (Approve/Reject + optional comment, §8)
+- [x] Sovereignty Dashboard page (dataviz stat tiles; egress-blocked = nominal)
+- [ ] Verify: all pages render with mock/static data (`npm run build` + `npm run lint`)
+- Additions beyond the 5-surface list:
+  - [x] Minimal Admin page (users + audit log) — per user choice + §4.1
+  - [x] Approvals queue page (approver/admin pending queue, §8)
+  - [x] Industrial control-room design system (tokens in `tailwind.config.js` + `index.css`); self-hosted/system fonts only — no CDN/external requests
+  - [x] Role-aware AppShell (telemetry bar) + `ProtectedRoute` RBAC (§6)
 
 ## Phase 6 — Connect Frontend with Backend
-- [ ] Replace mock data with real axios calls to backend endpoints
-- [ ] Verify: upload a real PDF, see it in documents list from DB
+- [x] Replace mock data with real axios calls to backend endpoints (via `src/api/` mock↔live seam; flip `VITE_USE_MOCKS=false`)
+- [ ] Verify: upload a real PDF, see it in documents list from DB (DB-assigned `document_id`)
+- Seam / wiring notes:
+  - [x] `src/api/` layer: one module per endpoint, `USE_MOCKS` switch, identical shapes both modes
+  - [x] JWT stored on login; axios request interceptor attaches Bearer; 401 → logout
+  - [x] Agent run poll loop (no websockets, §4.2); documents list built from upload responses (no `GET /documents` in Phase 4)
+  - [x] Live evidence empty until Phase 7 → truthful pending empty state; approvals/admin are mock/demo surfaces (no Phase 4 list/admin endpoints)
 
 ## Phase 7 — Add AI/Intelligent Features
 - [ ] 7.1 Model serving — install Ollama, pull `llama3.1:8b`, `qwen2.5-coder:7b`, `llava:7b`
