@@ -59,17 +59,17 @@
   - [x] Live evidence empty until Phase 7 → truthful pending empty state; approvals/admin are mock/demo surfaces (no Phase 4 list/admin endpoints)
 
 ## Phase 7 — Add AI/Intelligent Features
-- [ ] 7.1 Model serving — install Ollama, pull `llama3.1:8b`, `qwen2.5-coder:7b`, `llava:7b`
-- [ ] 7.2 Task Classifier (`agent/task_classifier.py`)
-- [ ] 7.3 Model Router (`agent/model_router.py`)
-- [ ] 7.4 RAG pipeline — `rag/ingest.py`, `rag/embed.py`, `rag/retrieve.py`
-- [ ] 7.5 Tools — `sandbox_tool.py`, `docgen_tool.py`, `file_tools.py`
-- [ ] 7.6 Agent Planner (`agent/planner.py`)
-- [ ] Verify: model routing logs show reasoning model + sandbox execution firing
+- [ ] 7.1 Model serving — install Ollama, pull `llama3.1:8b`, `qwen2.5-coder:7b`, `llava:7b` (or run local model endpoint)
+- [x] 7.2 Task Classifier (`agent/task_classifier.py`)
+- [x] 7.3 Model Router (`agent/model_router.py`)
+- [x] 7.4 RAG pipeline — `rag/ingest.py`, `rag/embed.py`, `rag/retrieve.py`
+- [x] 7.5 Tools — `sandbox_tool.py`, `docgen_tool.py`, `document_extractor.py`
+- [x] 7.6 Agent Planner (`agent/planner.py`)
+- [x] Verify: model routing logs show reasoning model + sandbox execution firing
 
 ## Phase 8 — Dashboards and Analytics
-- [ ] Create `core/network_guard.py` middleware (intercept + log outbound attempts; block non-localhost)
-- [ ] Build Sovereignty Dashboard from `sovereignty_log` + `agent_runs`
+- [x] Create `core/network_guard.py` middleware (intercept + log outbound attempts; block non-localhost)
+- [x] Build Sovereignty Dashboard from `sovereignty_log` + `agent_runs`
 - [ ] Verify: disconnect internet, run full flagship demo end-to-end
 
 ## Phase 9 — Testing and Debugging

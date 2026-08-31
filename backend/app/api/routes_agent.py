@@ -77,8 +77,7 @@ def _run_pipeline(run_id: int, goal: str, document_id: int | None) -> None:
         if run:
             run.status = result.status
             run.task_type = "inspection_approval"
-            # Store model_used + steps + evidence + flags as JSON in model_used column
-            # (reusing the text column; a dedicated JSON column can be added later)
+            # Serialise full run metadata as JSON in model_used (Text column — no truncation).
             run.model_used = json.dumps({
                 "models": result.model_used,
                 "steps_completed": result.steps_completed,
@@ -87,12 +86,27 @@ def _run_pipeline(run_id: int, goal: str, document_id: int | None) -> None:
                     {"claim_type": f.claim_type, "value": f.value, "note": f.note}
                     for f in result.verification_flags
                 ],
+                # Full RAG evidence — source_file / page / quote / confidence per chunk.
+                # This is what populates the frontend evidence panel with real citations.
+                "rag_evidence": [
+                    {
+                        "finding": r.finding,
+                        "source_file": r.source_file,
+                        "page_number": r.page_number,
+                        "exact_quote": r.exact_quote[:300],  # cap for DB size
+                        "confidence": round(r.confidence, 3),
+                        "doc_type": r.doc_type,
+                        "section_title": r.section_title,
+                    }
+                    for r in result.evidence
+                ],
                 "error": result.error,
             })
             db.commit()
             logger.info(
-                "AGENT_RUN_UPDATED | run_id=%d | status=%s | flags=%d | file=%s",
-                run_id, result.status, len(result.verification_flags), result.output_file,
+                "AGENT_RUN_UPDATED | run_id=%d | status=%s | flags=%d | rag_chunks=%d | file=%s",
+                run_id, result.status, len(result.verification_flags),
+                len(result.evidence), result.output_file,
             )
     except Exception as exc:
         logger.error("AGENT_RUN_BG_FAILED | run_id=%d | error=%s", run_id, exc, exc_info=True)
@@ -170,12 +184,25 @@ def agent_run_status(
     steps_completed: list[str] = meta.get("steps_completed") or []
     model_used_map: dict[str, str] = meta.get("models") or {}
 
-    # Build evidence list from verification flags (simplified — full evidence
-    # is embedded in the DOCX; the API returns flag summaries for the UI panel)
+    # Build evidence list:
+    # 1. Real RAG citations (source / page / quote / confidence) — shown first
+    # 2. Grounding verification flags — shown after, labelled [NEEDS REVIEW]
     evidence: list[Evidence] = []
+
+    for chunk in meta.get("rag_evidence") or []:
+        evidence.append(Evidence(
+            claim=chunk.get("finding", chunk.get("source_file", "retrieved chunk")),
+            source=(
+                f"{chunk.get('source_file', '?')}"
+                f" [{chunk.get('doc_type', '')}]"
+                f" conf={chunk.get('confidence', 0):.2f}"
+            ),
+            page=chunk.get("page_number", 0),
+        ))
+
     for flag in meta.get("verification_flags") or []:
         evidence.append(Evidence(
-            claim=f"[NEEDS REVIEW] {flag['claim_type']}: {flag['value']}",
+            claim=f"[NEEDS REVIEW] {flag['claim_type']}: {flag['value']} — {flag.get('note', '')}",
             source="grounding_verifier",
             page=0,
         ))

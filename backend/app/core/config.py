@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     ollama_host: str = "http://localhost:11434"
 
     # Auth / sandbox.
+    # SECURITY: jwt_secret MUST be overridden in .env before any real deployment.
+    # A guessable secret lets an attacker forge JWT tokens and bypass RBAC.
+    # Generate a safe value with:  python -c "import secrets; print(secrets.token_hex(32))"
     jwt_secret: str = "change-me-locally"
     sandbox_timeout_seconds: int = 30
 
@@ -35,3 +38,14 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+# SECURITY CHECK: warn loudly if the default JWT secret is still in use.
+# This fires at import time so it appears in the very first line of server output.
+import logging as _logging
+_log = _logging.getLogger(__name__)
+if settings.jwt_secret == "change-me-locally":
+    _log.error(
+        "SECURITY_CONFIG | jwt_secret is still the default value 'change-me-locally'. "
+        "Set JWT_SECRET in your .env file before any real deployment. "
+        "Generate a safe value: python -c \"import secrets; print(secrets.token_hex(32))\""
+    )

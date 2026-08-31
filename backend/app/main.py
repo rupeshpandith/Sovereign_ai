@@ -4,6 +4,9 @@ Thin composition layer per Architecture.md §4.2: this module wires middleware
 and mounts the API routers. Business logic lives under ``app/agent``,
 ``app/rag``, ``app/agent/tools`` and ``app/db``.
 
+Phase 8: the network guard is installed at process startup (before any library
+can make an outbound call) and the isolation probe runs in the background.
+
 Run locally from the ``backend/`` directory:
 
     uvicorn app.main:app --reload
@@ -15,6 +18,11 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+# Phase 8: Install the socket-level network guard BEFORE any other import
+# so no library can sneak in an outbound call during module initialisation.
+from app.core.network_guard import NetworkGuardMiddleware, install_socket_guard, probe_isolation
+install_socket_guard()
 
 from app.api import (
     routes_agent,
@@ -54,8 +62,29 @@ async def _startup_ingest() -> None:
         )
 
 
+async def _startup_probe() -> None:
+    """Run the isolation probe once at startup and log the result.
+
+    Fires as a background asyncio task so it does not delay server startup.
+    The result is stored in sovereignty_log; the dashboard reads it from there.
+    """
+    try:
+        probe_result = await asyncio.to_thread(probe_isolation)
+        if probe_result["all_blocked"]:
+            logger.info("SOVEREIGNTY_PROBE_STARTUP | result=all_cloud_endpoints_blocked | SOVEREIGN=True")
+        else:
+            logger.warning(
+                "SOVEREIGNTY_PROBE_STARTUP | result=some_endpoints_reachable | "
+                "SOVEREIGN=False | details=%s",
+                [r for r in probe_result["results"] if r["reachable"]],
+            )
+    except Exception as exc:
+        logger.error("SOVEREIGNTY_PROBE_STARTUP_FAILED | error=%s", exc)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+
     # 1. Auto-create the schema and seed local demo users on startup
     #    (Architecture.md §4.3 schema, §6 RBAC; SQLite MVP).
     init_db()
@@ -69,6 +98,11 @@ async def lifespan(app: FastAPI):
     #    Runs only if the collection is empty — idempotent across restarts.
     await _startup_ingest()
 
+    # 3. Run the isolation probe in the background (Phase 8).
+    #    Does not block startup. Result is stored in sovereignty_log so the
+    #    dashboard can show "last verified: <timestamp>" with proof.
+    asyncio.create_task(_startup_probe())
+
     yield
 
 
@@ -80,6 +114,10 @@ app.include_router(routes_documents.router)
 app.include_router(routes_agent.router)
 app.include_router(routes_approval.router)
 app.include_router(routes_sovereignty.router)
+
+# Phase 8: NetworkGuardMiddleware stamps X-Sovereignty on every HTTP response.
+# The socket-level hook (installed at module top) does the actual blocking.
+app.add_middleware(NetworkGuardMiddleware)
 
 # CORS is restricted to the local frontend origin(s) only. No wildcard: the backend
 # must not accept cross-origin traffic from anywhere off the local machine.
