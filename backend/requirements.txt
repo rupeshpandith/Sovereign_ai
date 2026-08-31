@@ -14,3 +14,7 @@ python-pptx
 pymupdf
 pytesseract
 pillow
+# Phase 7 additions
+httpx          # synchronous Ollama API calls in model_router.py
+pyyaml         # model_registry.yaml parsing
+lxml           # direct use in docgen_tool.py PPTX background fill (python-pptx transitive dep; explicit for clarity)

@@ -1,6 +1,7 @@
-.claude
-external
-CLAUDE.md
+# Antigravity / Agents
+.agents/
+external/
+AGENTS.md
 REPO_STATE.md
 
 # Python / backend
@@ -11,6 +12,7 @@ __pycache__/
 .env
 *.db
 backend/data/vector_store/
+backend/data
 
 # Node / frontend (frontend/.gitignore also covers these)
 node_modules/

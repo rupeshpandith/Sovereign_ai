@@ -1,0 +1,37 @@
+# Model Registry — single source of truth for model routing.
+#
+# Architecture.md §4.4: the router is config-driven, not hardcoded.
+# model_router.py MUST read this file at startup; no other file in the
+# codebase may hardcode model names for task routing.
+#
+# Hardware constraint (current): 8 GB RAM / 4 GB VRAM.
+# All inference tasks route to gemma4:e2b (2.3B effective params, multimodal)
+# via Ollama. See MODEL_MIGRATION.md for planned upgrades.
+
+models:
+  reasoning:
+    name: gemma4:e2b
+    endpoint: http://localhost:11434
+    note: >-
+      TEMPORARY — hardware-constrained (8 GB RAM / 4 GB VRAM). Replace with
+      llama3.1:8b or qwen2.5:7b when migrating to stronger hardware.
+
+  coding:
+    name: gemma4:e2b
+    endpoint: http://localhost:11434
+    note: >-
+      TEMPORARY — replace with qwen2.5-coder:7b later.
+
+  vision:
+    name: gemma4:e2b
+    endpoint: http://localhost:11434
+    note: >-
+      TEMPORARY — gemma4:e2b is multimodal so this works, but replace with
+      qwen2-vl:7b or llava:7b for stronger document/drawing understanding
+      later.
+
+  embedding:
+    name: all-MiniLM-L6-v2
+    endpoint: local
+    note: >-
+      PERMANENT — lightweight, CPU-based, no change needed later.
