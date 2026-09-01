@@ -168,6 +168,7 @@ def _corpus(evidence: list[RetrievalResult]) -> str:
 def verify_grounding(
     extracted: dict,          # keys: equipment_id, date, measurements, sop_ref
     evidence: list[RetrievalResult],
+    source_text: str = "",
 ) -> list[VerificationFlag]:
     """Check that each extracted claim literally appears in the retrieved corpus.
 
@@ -180,7 +181,7 @@ def verify_grounding(
     numbers and dates than the 7-8B models originally planned for this task.
     """
     flags: list[VerificationFlag] = []
-    corpus = _corpus(evidence).lower()
+    corpus = _corpus(evidence).lower() + "\n" + source_text.lower()
 
     # --- Equipment ID ---
     eq_id = (extracted.get("equipment_id") or "").strip()
@@ -603,7 +604,7 @@ class InspectionApprovalPlanner:
             # Any claim not found verbatim in retrieved chunks is flagged
             # "needs_human_review" rather than passed through silently.
             # ----------------------------------------------------------------
-            flags = verify_grounding(extracted, all_evidence)
+            flags = verify_grounding(extracted, all_evidence, source_text=acquired_text)
             result.verification_flags = flags
             result.steps_completed.append(STEP_VERIFY)
 

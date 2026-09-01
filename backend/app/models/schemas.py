@@ -26,6 +26,13 @@ class DocumentUploadResponse(BaseModel):
     status: str
 
 
+# --- GET /documents ---
+class DocumentListItem(BaseModel):
+    document_id: int
+    filename: str
+    status: str
+
+
 # --- POST /agent/run ---
 class AgentRunRequest(BaseModel):
     goal: str

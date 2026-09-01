@@ -2,12 +2,16 @@
 // run the local agent, watch the pipeline steps + model routing, read the grounded
 // evidence, and approve to produce the deliverable. No websockets — status is polled
 // (Architecture §4.2). Everything is local (sovereignty).
+//
+// All state (documents, selected doc, goal, run, evidence) is persisted to
+// localStorage so page reloads and tab switches do not lose progress.
 import { useEffect, useState } from 'react'
-import { initialDocuments } from '../api/documents'
-import { runAgent, getRunStatus } from '../api/agent'
+import { runAgent } from '../api/agent'
+import { uploadDocument } from '../api/documents'
 import { decideApproval } from '../api/approval'
 import { USE_MOCKS } from '../api/client'
 import { useAuth } from '../context/AuthContext'
+import { useWorkbenchState } from '../hooks/useWorkbenchState'
 import FileUpload from '../components/FileUpload'
 import DocumentsList from '../components/DocumentsList'
 import RunSteps from '../components/RunSteps'
@@ -16,7 +20,6 @@ import ApprovalModal from '../components/ApprovalModal'
 import StatusLight from '../components/StatusLight'
 
 const TERMINAL = ['awaiting_approval', 'approved', 'rejected', 'complete', 'failed']
-const DEFAULT_GOAL = 'Assess pump P-204 vibration against SOP-17 and draft an approval note.'
 
 const STATUS_STATE = {
   in_progress: 'active',
@@ -30,35 +33,50 @@ export default function WorkbenchPage() {
   const { role } = useAuth()
   const canRun = role === 'engineer' || role === 'admin'
 
-  const [documents, setDocuments] = useState(() => initialDocuments())
-  const [selectedId, setSelectedId] = useState(() => initialDocuments()[0]?.document_id ?? null)
-  const [goal, setGoal] = useState(DEFAULT_GOAL)
+  const {
+    documents, setDocuments,
+    selectedId, setSelectedId,
+    goal, setGoal,
+    run, setRun,
+    runStatus, setRunStatus,
+    runError, setRunError,
+  } = useWorkbenchState()
 
-  const [run, setRun] = useState(null)
-  const [runStatus, setRunStatus] = useState(null)
-  const [runError, setRunError] = useState(null)
   const [starting, setStarting] = useState(false)
-
   const [approvalOpen, setApprovalOpen] = useState(false)
   const [approvalBusy, setApprovalBusy] = useState(false)
   const [approvalResult, setApprovalResult] = useState(null)
+  const [slowRunNote, setSlowRunNote] = useState(false)
 
-  // Poll run status until a terminal state (capped). Re-runs when a new run starts.
+  // Poll run status until terminal state. Uses adaptive interval:
+  // fast (1.5s) for first 20 polls, then slow (3s) to avoid hammering.
+  // Cap at 200 polls (~8 min) — the planner can take 60-90s on cold Ollama.
   useEffect(() => {
     if (!run) return
+    const currentStatus = runStatus?.status
+    // If the stored status is already terminal, don't restart polling
+    if (currentStatus && TERMINAL.includes(currentStatus)) return
+
     let cancelled = false
     let polls = 0
     let timer
+
     const tick = async () => {
       polls += 1
       try {
+        const { getRunStatus } = await import('../api/agent')
         const status = await getRunStatus(run.agent_run_id)
         if (cancelled) return
         setRunStatus(status)
-        if (TERMINAL.includes(status.status) || polls >= 12) return
-        timer = setTimeout(tick, 1500)
+        if (TERMINAL.includes(status.status)) return
+        if (polls >= 200) {
+          setRunError('The agent run is taking longer than expected. Check the backend terminal for PLANNER_STEP logs.')
+          return
+        }
+        const interval = polls < 20 ? 1500 : 3000
+        timer = setTimeout(tick, interval)
       } catch {
-        if (!cancelled) setRunError('Failed to fetch run status.')
+        if (!cancelled) setRunError('Failed to fetch run status — backend may have restarted.')
       }
     }
     timer = setTimeout(tick, 600)
@@ -66,13 +84,23 @@ export default function WorkbenchPage() {
       cancelled = true
       clearTimeout(timer)
     }
-  }, [run])
+  }, [run]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Show 'still running' hint after 15s with no terminal status
+  const status = runStatus?.status
+  const running = Boolean(run) && (!status || status === 'in_progress')
+  useEffect(() => {
+    if (!running) { setSlowRunNote(false); return }
+    const t = setTimeout(() => setSlowRunNote(true), 15000)
+    return () => clearTimeout(t)
+  }, [running])
 
   async function handleRun() {
     setStarting(true)
     setRunError(null)
     setRunStatus(null)
     setApprovalResult(null)
+    setSlowRunNote(false)
     try {
       const started = await runAgent({ goal, document_id: selectedId })
       setRun(started)
@@ -101,8 +129,6 @@ export default function WorkbenchPage() {
     }
   }
 
-  const status = runStatus?.status
-  const running = Boolean(run) && (!status || status === 'in_progress')
   const awaitingApproval = status === 'awaiting_approval'
   const evidenceEmptyMsg = USE_MOCKS
     ? undefined
@@ -145,6 +171,16 @@ export default function WorkbenchPage() {
           <p className="mt-2 text-xs text-caution">Your role can view runs but not start them (engineer role required).</p>
         )}
         {runError && <p className="mt-2 text-sm text-trip">{runError}</p>}
+        {slowRunNote && !runError && (
+          <p className="mt-2 text-xs text-muted">
+            ⏳ Pipeline running — this takes 30–90 s while the local model processes the document. Watch the backend terminal for <code>PLANNER_STEP</code> logs.
+          </p>
+        )}
+        {run && !running && !runError && (
+          <p className="mt-2 text-xs text-muted">
+            Last run: <span className="text-accent">#{run.agent_run_id}</span> — status preserved across reloads.
+          </p>
+        )}
       </section>
 
       <div className="grid gap-5 lg:grid-cols-[minmax(260px,1fr)_minmax(240px,320px)_minmax(320px,1.4fr)]">

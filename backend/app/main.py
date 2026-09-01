@@ -14,7 +14,27 @@ Run locally from the ``backend/`` directory:
 
 import asyncio
 import logging
+import os
 from contextlib import asynccontextmanager
+
+# Configure root logger so that background-thread logs from the planner,
+# RAG pipeline, and agent tools appear in the uvicorn console.
+# Without this call the logging module discards all non-WARNING messages
+# from threads spawned by BackgroundTasks.
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s:     %(name)s - %(message)s",
+)
+# Silence noisy third-party loggers
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("chromadb").setLevel(logging.WARNING)
+logging.getLogger("sentence_transformers").setLevel(logging.WARNING)
+logging.getLogger("multipart").setLevel(logging.WARNING)
+
+# Enforce fully offline mode for HuggingFace/transformers so they don't even
+# attempt to check for config updates when the model weights are already cached locally.
+os.environ["HF_HUB_OFFLINE"] = "1"
+os.environ["TRANSFORMERS_OFFLINE"] = "1"
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware

@@ -287,3 +287,36 @@ def ingest_directory(docs_dir: Path = DEFAULT_DOCS_DIR) -> list[DocumentChunk]:
         len(all_chunks),
     )
     return all_chunks
+
+
+def ingest_text(
+    text: str,
+    filename: str,
+    doc_type: Optional[str] = None,
+) -> list[DocumentChunk]:
+    """Chunk already-extracted text into DocumentChunk objects.
+
+    Use this when the caller (e.g. the upload route) has already run OCR and
+    holds the plain text — avoids re-reading the file from disk.
+
+    Args:
+        text:      The full extracted text of the document.
+        filename:  Original filename (used for metadata + doc-type inference).
+        doc_type:  Override the inferred doc_type if the caller already knows it.
+
+    Returns:
+        List of DocumentChunk objects ready for ``embed.add_chunks()``.
+    """
+    effective_doc_type = doc_type or _classify_doc_type(filename)
+    chunks = _chunk_text(
+        text=text,
+        source_file=filename,
+        doc_type=effective_doc_type,
+        page_number=1,   # text strings are treated as a single page
+    )
+    logger.info(
+        "INGEST_TEXT_DONE | file=%s | doc_type=%s | chunks=%d",
+        filename, effective_doc_type, len(chunks),
+    )
+    return chunks
+

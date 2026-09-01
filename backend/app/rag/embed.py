@@ -49,18 +49,33 @@ _embedding_fn = None
 
 
 def _get_embedding_fn():
-    """Return the ChromaDB-compatible embedding function (lazy init)."""
+    """Return the ChromaDB-compatible embedding function (lazy init).
+
+    ``local_files_only=True`` tells sentence-transformers to use only the
+    local HuggingFace cache and never attempt an outbound HEAD request to
+    huggingface.co for config/adapter files.  This is mandatory because the
+    Phase-8 network guard blocks all non-local connections at the OS socket
+    level — without this flag the library would retry 5× and crash startup.
+    """
     global _embedding_fn
     if _embedding_fn is None:
         try:
             from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
-            _embedding_fn = SentenceTransformerEmbeddingFunction(model_name=EMBEDDING_MODEL)
-            logger.info("EMBED_MODEL_LOADED | model=%s", EMBEDDING_MODEL)
+            _embedding_fn = SentenceTransformerEmbeddingFunction(
+                model_name=EMBEDDING_MODEL,
+                # Never phone home — weights must already be in the local cache.
+                # Run: python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"  # noqa: E501
+                # once (with internet) to populate the cache before enabling the guard.
+                local_files_only=True,
+            )
+            logger.info("EMBED_MODEL_LOADED | model=%s | local_files_only=True", EMBEDDING_MODEL)
         except Exception as exc:
             raise RuntimeError(
-                f"Failed to load embedding model '{EMBEDDING_MODEL}'. "
-                "Ensure sentence-transformers is installed: "
-                "pip install sentence-transformers"
+                f"Failed to load embedding model '{EMBEDDING_MODEL}' from local cache. "
+                "Run the following command once (with internet, guard off) to download:\n"
+                "  python -c \"from sentence_transformers import SentenceTransformer; "
+                f"SentenceTransformer('{EMBEDDING_MODEL}')\"\n"
+                "Then restart the server with the guard enabled."
             ) from exc
     return _embedding_fn
 

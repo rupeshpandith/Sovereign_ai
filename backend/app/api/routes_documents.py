@@ -9,8 +9,13 @@ Uploaded files are treated as untrusted input:
 
 Phase 7: extraction is now live. Status is "extracted" on success, "uploaded"
 if extraction produced no text (fallback — agent will retry in-pipeline).
+
+Phase 7.4 (upload→embed fix): after extraction succeeds, the extracted text is
+immediately chunked and embedded into ChromaDB so the grounding verifier can
+find the claims in retrieved chunks during the agent pipeline.
 """
 
+import asyncio
 import logging
 import os
 
@@ -20,12 +25,38 @@ from sqlalchemy.orm import Session
 from app.core.security import require_roles
 from app.db.database import get_db
 from app.models.db_models import Document, User
-from app.models.schemas import DocumentUploadResponse
+from app.models.schemas import DocumentListItem, DocumentUploadResponse
 
 logger = logging.getLogger(__name__)
 router = APIRouter(tags=["documents"])
 
 UPLOAD_DIR = os.path.join("data", "uploads")
+
+
+@router.get("/documents", response_model=list[DocumentListItem])
+def list_documents(
+    db: Session = Depends(get_db),
+    user: User = Depends(require_roles("engineer")),
+) -> list[DocumentListItem]:
+    """Return the 20 most recently uploaded documents for the current user's session.
+
+    Used by the frontend to rebuild the document list after a page reload
+    without requiring the user to re-upload everything.
+    """
+    docs = (
+        db.query(Document)
+        .order_by(Document.id.desc())
+        .limit(20)
+        .all()
+    )
+    return [
+        DocumentListItem(
+            document_id=d.id,
+            filename=d.filename,
+            status="extracted" if d.extracted_text else "uploaded",
+        )
+        for d in docs
+    ]
 
 
 @router.post("/documents/upload", response_model=DocumentUploadResponse)
@@ -34,11 +65,15 @@ async def upload_document(
     db: Session = Depends(get_db),
     user: User = Depends(require_roles("engineer")),
 ) -> DocumentUploadResponse:
-    """Upload a document, save it to disk, and extract its text locally.
+    """Upload a document, save it to disk, extract its text, and embed it.
 
     Extraction uses Tesseract OCR (Stage 1) with an automatic fallback to
     the vision model (Stage 2) for handwriting / diagrams that Tesseract
     cannot parse.  See document_extractor.py for the full strategy.
+
+    After extraction the text is chunked and embedded into ChromaDB so that
+    subsequent agent runs can retrieve it via semantic search and the grounding
+    verifier can confirm extracted claims against the source document.
     """
     from app.agent.tools.document_extractor import extract_text
 
@@ -62,10 +97,12 @@ async def upload_document(
 
     # Extract text locally (Tesseract → vision fallback).
     extraction_status = "uploaded"
+    extracted_text: str | None = None
     try:
         result = extract_text(file_bytes, safe_name)
         if result.full_text:
-            doc.extracted_text = result.full_text
+            extracted_text = result.full_text
+            doc.extracted_text = extracted_text
             db.commit()
             extraction_status = "extracted"
             logger.info(
@@ -87,8 +124,40 @@ async def upload_document(
             doc.id, safe_name, exc,
         )
 
+    # -------------------------------------------------------------------------
+    # Embed into ChromaDB (Phase 7.4 upload→embed fix).
+    # Runs in a background thread so it doesn't block the HTTP response.
+    # Non-fatal: if embedding fails the document is still usable via SQLite.
+    # -------------------------------------------------------------------------
+    if extracted_text:
+        async def _embed_in_background() -> None:
+            try:
+                from app.rag.ingest import ingest_text
+                from app.rag.embed import add_chunks
+                chunks = await asyncio.to_thread(ingest_text, extracted_text, safe_name)
+                if chunks:
+                    stored = await asyncio.to_thread(add_chunks, chunks)
+                    logger.info(
+                        "UPLOAD_EMBED_DONE | doc_id=%d | file=%s | chunks=%d | stored=%d",
+                        doc.id, safe_name, len(chunks), stored,
+                    )
+                else:
+                    logger.warning(
+                        "UPLOAD_EMBED_EMPTY | doc_id=%d | file=%s | reason=no chunks produced",
+                        doc.id, safe_name,
+                    )
+            except Exception as embed_exc:
+                logger.error(
+                    "UPLOAD_EMBED_FAILED | doc_id=%d | file=%s | error=%s | "
+                    "hint=agent grounding may flag claims as unverified",
+                    doc.id, safe_name, embed_exc,
+                )
+
+        asyncio.create_task(_embed_in_background())
+
     return DocumentUploadResponse(
         document_id=doc.id,
         filename=safe_name,
         status=extraction_status,
     )
+

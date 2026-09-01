@@ -580,7 +580,7 @@ def _add_label_value(doc, label: str, value: str) -> None:
     run_label.font.size = Pt(10)
     run_value = p.add_run(value)
     run_value.font.size = Pt(10)
-    p.paragraph_format.space_after = p.paragraph_format.space_after.__class__(0)
+    p.paragraph_format.space_after = Pt(0)  # space_after is None by default; use Pt directly
 
 
 def _bold_cell(cell) -> None:
