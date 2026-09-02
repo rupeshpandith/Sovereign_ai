@@ -1,0 +1,84 @@
+SYNTHETIC DATA - for development/demo only, not real MRPL data.
+========================================================================
+
+STANDARD OPERATING PROCEDURE — SOP-22
+Title    : Valve Inspection and Leak Testing Procedures for High-Pressure Service
+Revision : Rev 2   |   Effective: 2024-06-01   |   Review Due: 2026-06-01
+Approved : Chief Inspector, Instrumentation & Piping (signature on file)
+Applies to: All control valves and isolation valves in HP steam, HP gas,
+            and process services (design pressure > 10 bar), including
+            but not limited to: V-33, V-41, V-55, V-102, V-118.
+
+========================================================================
+
+1. PURPOSE
+
+   This SOP defines inspection intervals, leak test methods, acceptance
+   criteria, and corrective action requirements for high-pressure valves
+   to ensure safe and reliable operation.
+
+2. SCOPE
+
+   §2.1  Covers in-situ inspection, partial-stroke testing, and bench
+         testing of control valves and isolation valves in HP service.
+
+   §2.2  V-33 (HP steam letdown, service line SL-06) is a designated
+         critical valve requiring Class V seat tightness.
+
+3. INSPECTION INTERVALS
+
+   §3.1  Routine (in-situ walkaround): monthly.
+   §3.2  Detailed inspection (this procedure): every 6 months, or
+         after any process upset or emergency closure.
+   §3.3  Bench teardown and refacing: as determined by §5.1 acceptance
+         criteria, or minimum every 4 years.
+
+4. LEAK TEST PROCEDURE (IN-SITU)
+
+   §4.1  Isolate valve and equalise to test pressure (10 bar minimum).
+   §4.2  Connect calibrated bubble meter to downstream vent.
+   §4.3  Record leakage rate over three 2-minute runs. Report the average.
+   §4.4  Annotate report with instrument serial number and calibration date.
+
+5. ACCEPTANCE CRITERIA — SEAT LEAKAGE
+
+   §5.1  ANSI/FCI 70-2 Class V (HP steam, V-33 and similar):
+         Maximum allowable: 0.30 mL/min per mm of port diameter at
+         differential pressure equal to maximum rated pressure.
+         — Within limit:   NORMAL, continue service.
+         — 0.30–0.50 mL/min (FLAG):  Increased monitoring (4-hourly);
+           approval note required per §6.3 before continued operation.
+         — > 0.50 mL/min (REJECT):   Immediate isolation and work order
+           for bench refacing or trim replacement.
+
+   §5.2  ANSI/FCI 70-2 Class IV (general process valves):
+         Maximum allowable: 0.01% of rated Cv per unit differential.
+
+6. CORRECTIVE ACTIONS AND APPROVALS
+
+   §6.1  Work order must be raised for any finding that exceeds acceptance
+         criteria, referencing this SOP section and the inspection report ID.
+
+   §6.2  Interim continued operation (FLAG range per §5.1) is permitted
+         only if: (a) leakage rate is checked every 4 hours, (b) rate has
+         not trended upward over the prior two readings, and (c) an approval
+         note has been filed per §6.3.
+
+   §6.3  Approval Note requirement: AN must reference inspection report IR
+         number, this SOP (SOP-22), the specific finding number, the measured
+         value, and the acceptance limit. AN must be countersigned by the
+         Area Engineer before the next inspection shift begins.
+
+7. ACTUATOR AND POSITIONER CHECKS
+
+   §7.1  Positioner deviation must be within ±2 % of demand signal.
+   §7.2  Actuator bench-set: verify against valve data sheet (VDS-V33-001
+         for V-33: 0.6–1.0 bar).
+   §7.3  Packing: zero leakage is the acceptance criterion for all HP valves.
+
+8. REFERENCES
+
+   ANSI/FCI 70-2     — Control valve seat leakage classifications.
+   SOP-17            — Vibration limits (for pumps driving HP process valves).
+   VDS-V33-001       — Valve data sheet, V-33.
+   EM-2022-017       — HP steam service classification list.

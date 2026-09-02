@@ -1,0 +1,60 @@
+SYNTHETIC DATA - for development/demo only, not real MRPL data.
+========================================================================
+
+INSPECTION REPORT — IR-745
+Facility : Mangalore Refinery (Unit 2 — Naphtha Hydrotreater)
+Equipment : Shell-and-Tube Heat Exchanger HX-12 (Feed/effluent, service NHT-02)
+Inspection Date : 2026-06-10
+Inspector : S. D. Kulkarni  (Badge: INS-019)
+Next Due        : 2026-12-10
+
+------------------------------------------------------------------------
+1. SCOPE
+   Six-monthly thermal performance and mechanical inspection. Vibration
+   check on feed-circulation pump (P-211, coupled to HX-12 shell side)
+   performed concurrently per SOP-17 §2.1 (associated rotating equipment).
+
+------------------------------------------------------------------------
+2. MEASUREMENTS
+
+   Parameter                  Reading       Allowable Limit   Status
+   -------------------------  ------------  ----------------  ----------
+   Shell-side dp (fouling)    0.41 bar      <= 0.50 bar       NORMAL
+   Tube-side dp (fouling)     0.38 bar      <= 0.45 bar       NORMAL
+   Approach Temperature       8.2 °C        >= 6 °C           NORMAL
+   LMTD Efficiency            81.4 %        >= 75 %           NORMAL
+   P-211 Vibration (DE end)   4.1 mm/s RMS  <= 6.0 mm/s      NORMAL
+   P-211 Bearing Temp (DE)    69 °C         <= 85 °C          NORMAL
+   HX-12 Shell Thickness(min) 12.1 mm       >= 11.0 mm        NORMAL
+
+------------------------------------------------------------------------
+3. FINDINGS
+
+   F-1 (NORMAL): Thermal performance satisfactory. LMTD efficiency
+       above the SOP-17 §2.3 minimum of 75 % for combined heat exchanger
+       and associated pump assessment.
+
+   F-2 (NORMAL): Feed-circulation pump P-211 vibration well within
+       SOP-17 §3.2 continuous-operation limit of 6.0 mm/s.
+
+   F-3 (OBSERVE): Tube bundle inlet face shows partial fouling deposit
+       (estimated 15 % blockage at periphery). Not yet affecting
+       performance but warrants hydroblast cleaning at next planned
+       shutdown (Q4-2026).
+
+   F-4 (OBSERVE): Two tube plugs installed on previous inspection
+       (IR-680, 2025-12-02) are intact and leak-free.
+
+------------------------------------------------------------------------
+4. RECOMMENDATIONS
+
+   1. No immediate corrective action required. Continue six-monthly
+      thermal performance monitoring.
+   2. Include HX-12 tube bundle hydroblast in Q4-2026 turnaround scope.
+   3. Maintain P-211 vibration monitoring per SOP-17 §3.2 schedule.
+
+------------------------------------------------------------------------
+5. INSPECTOR CERTIFICATION
+   Fluke 810 Vibration Tester used for pump readings (Cal due: 2026-12-01).
+   Thermal readings from DCS historian extract (tag: NHT02-HX12-LMTD).
+   Signature: S. D. Kulkarni     Date: 2026-06-10

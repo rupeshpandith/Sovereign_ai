@@ -1,0 +1,59 @@
+SYNTHETIC DATA - for development/demo only, not real MRPL data.
+========================================================================
+
+APPROVAL NOTE — AN-A102
+Subject  : Continued Operation Approval — Pump P-204 (DE Bearing Vibration Alert)
+Date     : 2026-08-16
+Raised by: R. K. Sharma, Inspector  (Badge: INS-047)
+Reviewed : V. Hegde, Area Engineer  (Badge: ENG-012)
+
+------------------------------------------------------------------------
+1. REFERENCE DOCUMENTS
+
+   Inspection Report : IR-892, dated 2026-08-15
+   Applicable SOP    : SOP-17, Rev 4 (Vibration Limits, §3.2 and §4.1)
+   Work Order        : WO-2026-4471 (bearing investigation — raised 2026-08-15)
+
+------------------------------------------------------------------------
+2. FINDING SUMMARY
+
+   Equipment P-204 (Centrifugal Feed Pump, Unit 4) was found with Drive
+   End (DE) bearing vibration of 6.7 mm/s RMS on 2026-08-15.
+
+   This exceeds the SOP-17 §3.2 ALERT limit of 6.0 mm/s but is below
+   the SOP-17 §3.3 SHUTDOWN limit of 7.0 mm/s.
+
+   Finding F-1 from IR-892: "DE vibration at 6.7 mm/s confirmed on three
+   consecutive scans over 45 minutes."
+
+------------------------------------------------------------------------
+3. RISK ASSESSMENT
+
+   Current reading (6.7 mm/s) places P-204 in the SOP-17 §3.4 CAUTION
+   BAND (> 6.0 and <= 7.0 mm/s). Equipment may operate for a maximum
+   of 72 hours in this band with 2-hourly readings.
+
+   Process consequence of immediate shutdown: Column C-101 feed interruption,
+   estimated 4-hour recovery, product quality impact estimated at INR 12L.
+
+   Risk of continued operation: LOW for 72-hour window if monitoring is
+   maintained; bearing replacement scheduled for next planned shutdown.
+
+------------------------------------------------------------------------
+4. CONDITIONS FOR CONTINUED OPERATION
+
+   (a) Vibration readings taken every 2 hours and logged in DCS tag
+       PMP-P204-VIB-DE.
+   (b) Immediate isolation if reading reaches 7.0 mm/s (SOP-17 §3.3).
+   (c) Relief watch notified. Area Engineer alerted for any step-change
+       > 0.3 mm/s between consecutive readings.
+   (d) WO-2026-4471 progressed to bearing replacement within 72 hours.
+
+------------------------------------------------------------------------
+5. APPROVAL DECISION
+
+   APPROVED for continued operation under the conditions in §4 above,
+   for a maximum of 72 hours from the date of this note.
+
+   Area Engineer Signature: V. Hegde       Date: 2026-08-16
+   Inspector Signature    : R. K. Sharma   Date: 2026-08-16

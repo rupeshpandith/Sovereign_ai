@@ -1,0 +1,58 @@
+SYNTHETIC DATA - for development/demo only, not real MRPL data.
+========================================================================
+
+INSPECTION REPORT — IR-892
+Facility : Mangalore Refinery (Unit 4 — Crude Distillation)
+Equipment : Centrifugal Pump P-204 (Feed charge pump, Column C-101 suction)
+Inspection Date : 2026-08-15
+Inspector : R. K. Sharma  (Badge: INS-047)
+Next Due        : 2027-02-15
+
+------------------------------------------------------------------------
+1. SCOPE
+   Routine condition-monitoring inspection per SOP-17 (Vibration Limits
+   and Shutdown Criteria for Rotating Equipment).
+
+------------------------------------------------------------------------
+2. MEASUREMENTS
+
+   Parameter            Reading         Allowable Limit  Status
+   -------------------  --------------  ---------------  ----------
+   Vibration (NDE end)  5.8 mm/s RMS    <= 6.0 mm/s      NORMAL
+   Vibration (DE end)   6.7 mm/s RMS    <= 6.0 mm/s      *** ALERT ***
+   Bearing Temp (DE)    78 °C           <= 85 °C          NORMAL
+   Bearing Temp (NDE)   74 °C           <= 85 °C          NORMAL
+   Discharge Pressure   14.2 bar        12–15 bar         NORMAL
+   Suction Pressure     2.1 bar         1.8–2.5 bar       NORMAL
+   Motor Current        38.4 A          <= 42 A           NORMAL
+
+------------------------------------------------------------------------
+3. FINDINGS
+
+   F-1 (ALERT): Drive-end (DE) vibration at 6.7 mm/s RMS exceeds the
+       SOP-17 §3.2 continuous-operation limit of 6.0 mm/s. Reading
+       confirmed on three consecutive scans over 45 minutes.
+
+   F-2 (NORMAL): NDE vibration within limits. Bearing temperatures
+       normal on both ends.
+
+   F-3 (OBSERVE): Slight seal-face weeping observed at the mechanical
+       seal. Volume is within acceptable seepage tolerance (< 5 drops/min).
+       Recommend monitoring at next weekly walkdown.
+
+------------------------------------------------------------------------
+4. RECOMMENDATIONS
+
+   1. Raise WORK ORDER for P-204 DE bearing vibration investigation.
+      Per SOP-17 §4.1, continued operation is permitted at ALERT level
+      provided: (a) readings are taken every 4 hours, (b) unit is shutdown
+      immediately if vibration reaches 7.0 mm/s (SOP-17 §3.3 SHUTDOWN
+      limit), and (c) approval note is raised and signed off.
+   2. Schedule bearing replacement during next planned shutdown window.
+   3. Monitor mechanical seal weeping — escalate if rate increases.
+
+------------------------------------------------------------------------
+5. INSPECTOR CERTIFICATION
+   I certify the above readings were taken with Fluke 810 Vibration Tester
+   (Cal due: 2026-12-01) and are accurate to the best of my knowledge.
+   Signature: R. K. Sharma        Date: 2026-08-15

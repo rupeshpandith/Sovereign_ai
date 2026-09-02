@@ -1,0 +1,63 @@
+SYNTHETIC DATA - for development/demo only, not real MRPL data.
+========================================================================
+
+APPROVAL NOTE — AN-A098
+Subject  : Continued Operation Approval — Valve V-33 (Seat Leakage Flag)
+Date     : 2026-07-29
+Raised by: P. T. Nair, Inspector  (Badge: INS-031)
+Reviewed : A. Shetty, Area Engineer  (Badge: ENG-008)
+
+------------------------------------------------------------------------
+1. REFERENCE DOCUMENTS
+
+   Inspection Report : IR-811, dated 2026-07-28
+   Applicable SOP    : SOP-22, Rev 2 (Valve Inspection, §5.1 and §6.2–6.3)
+   Work Order        : WO-2026-3987 (seat refacing / trim replacement)
+
+------------------------------------------------------------------------
+2. FINDING SUMMARY
+
+   Control Valve V-33 (HP steam letdown, service line SL-06, Unit 6) was
+   found with in-situ seat leakage of 0.34 mL/min on 2026-07-28, measured
+   per SOP-22 §4.3 (three-run average with Fluke 710, Cal due 2026-11-15).
+
+   This exceeds the SOP-22 §5.1 ANSI/FCI 70-2 Class V limit of 0.30 mL/min
+   but is below the SOP-22 §5.1 REJECT threshold of 0.50 mL/min.
+
+   Finding F-1 from IR-811: "Seat leakage 0.34 mL/min — exceeds Class V
+   limit of 0.30 mL/min. Measurement confirmed as three-run average."
+
+------------------------------------------------------------------------
+3. RISK ASSESSMENT
+
+   HP steam letdown valve V-33 is a throttling service with low consequence
+   of minor seat leakage on the downstream side; the leakage routes to the
+   closed condensate drain header (no atmospheric release).
+
+   Immediate isolation consequence: steam supply interruption to Unit 6
+   stripping column; estimated 6-hour restart; production impact ~INR 8L.
+
+   Risk of continued operation: TOLERABLE within the SOP-22 §6.2 condition
+   set, provided leakage does not trend upward toward the 0.50 mL/min
+   REJECT limit.
+
+------------------------------------------------------------------------
+4. CONDITIONS FOR CONTINUED OPERATION
+
+   (a) Leakage rate measured every 4 hours and recorded in logsheet LS-V33.
+   (b) Immediate isolation required if leakage exceeds 0.50 mL/min
+       (SOP-22 §5.1 REJECT limit) or shows an increasing trend over two
+       consecutive readings.
+   (c) WO-2026-3987 progressed to trim replacement within next planned
+       maintenance window (target: 2026-08-12).
+   (d) Area Engineer to review logsheet daily until WO closed.
+
+------------------------------------------------------------------------
+5. APPROVAL DECISION
+
+   APPROVED for continued operation under the conditions in §4 above.
+   Validity: until WO-2026-3987 is completed or leakage reaches REJECT
+   limit, whichever occurs first.
+
+   Area Engineer Signature: A. Shetty      Date: 2026-07-29
+   Inspector Signature    : P. T. Nair     Date: 2026-07-29

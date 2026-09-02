@@ -10,10 +10,20 @@ venv/
 __pycache__/
 *.pyc
 .env
-*.db
+
+# Runtime-generated data (never commit these)
+backend/data/app.db
 backend/data/vector_store/
-backend/data
+backend/data/uploads/
+backend/data/deliverables/
+
+# sample_docs/ IS committed — it contains the demo knowledge base.
+# The new machine's vector store is built from it on first startup.
 
 # Node / frontend (frontend/.gitignore also covers these)
 node_modules/
 dist/
+
+# Scratch / dev scripts
+backend/scratch_test.py
+backend/check_status.py

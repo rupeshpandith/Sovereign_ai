@@ -1,0 +1,59 @@
+SYNTHETIC DATA - for development/demo only, not real MRPL data.
+========================================================================
+
+INSPECTION REPORT — IR-811
+Facility : Mangalore Refinery (Unit 6 — Vacuum Distillation)
+Equipment : Globe Control Valve V-33 (HP steam letdown, service line SL-06)
+Inspection Date : 2026-07-28
+Inspector : P. T. Nair  (Badge: INS-031)
+Next Due        : 2027-01-28
+
+------------------------------------------------------------------------
+1. SCOPE
+   Scheduled valve body and actuator inspection per SOP-22 (Valve
+   Inspection and Leak Testing Procedures for High-Pressure Service).
+
+------------------------------------------------------------------------
+2. MEASUREMENTS
+
+   Parameter               Reading        Allowable Limit   Status
+   ----------------------  -------------  ----------------  ----------
+   Seat Leakage (Class V)  0.34 mL/min    <= 0.30 mL/min    *** FLAG ***
+   Packing Leakage         0.0 mL/min     0 (zero)          NORMAL
+   Actuator Air Supply     5.8 bar        5.5 – 6.2 bar     NORMAL
+   Positioner Deviation    +1.2 %         <= ±2 %           NORMAL
+   Body Wall Thickness     9.1 mm (min)   >= 8.5 mm         NORMAL
+   Hydro Test Pressure     N/A (in situ)  N/A               —
+
+------------------------------------------------------------------------
+3. FINDINGS
+
+   F-1 (FLAG): Seat leakage measured at 0.34 mL/min exceeds the ANSI/FCI
+       70-2 Class V limit of 0.30 mL/min specified in SOP-22 §5.1 for
+       high-pressure steam service. Measurement performed per SOP-22 §4.3
+       (bubble test, three-run average).
+
+   F-2 (NORMAL): Packing gland shows zero leakage. Gland bolts last
+       retorqued 2026-04-10; condition acceptable.
+
+   F-3 (NORMAL): Positioner calibration within ±2 % band. Actuator
+       bench-set 0.6–1.0 bar confirmed.
+
+   F-4 (OBSERVE): Minor surface corrosion (Grade 2) on the upper body
+       external surface. No wall-thinning detected by UT scan.
+
+------------------------------------------------------------------------
+4. RECOMMENDATIONS
+
+   1. Raise WORK ORDER for V-33 seat refacing or trim replacement.
+      Per SOP-22 §6.2, valve may remain in service with 4-hourly leakage
+      checks provided leakage does not exceed 0.50 mL/min. Immediate
+      isolation required if threshold is crossed.
+   2. Approval note AN required per SOP-22 §6.3 before continuing
+      operation beyond the inspection date.
+   3. Apply protective coating to upper body at next opportunity.
+
+------------------------------------------------------------------------
+5. INSPECTOR CERTIFICATION
+   Readings taken with Fluke 710 Valve Tester (Cal due: 2026-11-15).
+   Signature: P. T. Nair          Date: 2026-07-28

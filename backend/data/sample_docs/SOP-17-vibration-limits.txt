@@ -1,0 +1,65 @@
+SYNTHETIC DATA - for development/demo only, not real MRPL data.
+========================================================================
+
+STANDARD OPERATING PROCEDURE — SOP-17
+Title    : Vibration Limits and Shutdown Criteria for Rotating Equipment
+Revision : Rev 4   |   Effective: 2025-01-01   |   Review Due: 2027-01-01
+Approved : Chief Inspector, Mechanical (signature on file)
+Applies to: All centrifugal pumps, compressors, and fans in Units 1–8,
+            including but not limited to: P-204, P-211, P-115, C-02, FN-07.
+
+========================================================================
+
+1. PURPOSE
+
+   This SOP defines mandatory vibration monitoring frequencies, alert
+   thresholds, and shutdown criteria to prevent catastrophic failure of
+   rotating machinery and protect personnel safety.
+
+2. SCOPE AND APPLICABILITY
+
+   §2.1  Applies to all rotating equipment subject to condition-monitoring
+         programmes. Heat exchanger associated pumps (e.g. P-211 for HX-12)
+         are included under this SOP per Engineering Memo EM-2023-041.
+
+   §2.2  Measurement shall be taken at both Drive End (DE) and Non-Drive
+         End (NDE) bearing housings in the radial (horizontal and vertical)
+         and axial directions. Report the highest single-axis RMS reading.
+
+   §2.3  Heat exchanger thermal performance checks that include associated
+         pump assessments must reference and comply with §3 of this SOP.
+
+3. VIBRATION LIMITS (mm/s RMS — ISO 10816-3 Group 2)
+
+   §3.1  NORMAL (Unrestricted operation):    <= 4.5 mm/s
+   §3.2  ALERT  (Increased monitoring):      > 4.5 and <= 6.0 mm/s
+           — Readings shall be taken every 4 hours.
+           — Engineering supervisor must be notified within 2 hours.
+           — An Approval Note (AN) must be raised within 24 hours to
+             document risk acceptance for continued operation.
+   §3.3  SHUTDOWN (Immediate isolation):     > 7.0 mm/s
+           — Equipment must be shut down immediately.
+           — No overrides or deferrals are permitted without VP sign-off.
+   §3.4  CAUTION BAND (Elevated attention): > 6.0 and <= 7.0 mm/s
+           — Equipment may operate for a maximum of 72 hours in this band.
+           — Readings every 2 hours. Work order for repair must be raised.
+           — AN referencing this SOP section must be filed within 8 hours.
+
+4. MONITORING FREQUENCIES (NORMAL band)
+
+   §4.1  Online continuous monitoring (where installed): real-time alarm
+         at the ALERT limit (6.0 mm/s) via DCS.
+   §4.2  Monthly route-based handheld check for all pumps without online
+         monitoring. Portable calibrated vibration analyser required.
+   §4.3  Bi-annual detailed inspection per SOP-17 inspection report template.
+
+5. INSTRUMENT CALIBRATION
+
+   All vibration measurement instruments must be within calibration.
+   Calibration records must be cited in every inspection report.
+
+6. REFERENCES
+
+   ISO 10816-3  —  Mechanical vibration, rotating machinery.
+   SOP-22       —  Valve Inspection (for valves on pump suction/discharge).
+   EM-2023-041  —  Scope extension to heat exchanger associated pumps.
