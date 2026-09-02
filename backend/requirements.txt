@@ -18,3 +18,5 @@ pillow
 httpx          # synchronous Ollama API calls in model_router.py
 pyyaml         # model_registry.yaml parsing
 lxml           # direct use in docgen_tool.py PPTX background fill (python-pptx transitive dep; explicit for clarity)
+# Phase 9 additions (testing)
+pytest         # unit + edge-case test suite (backend/tests/); manual_e2e.py reuses httpx

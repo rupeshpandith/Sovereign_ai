@@ -73,10 +73,12 @@
 - [ ] Verify: disconnect internet, run full flagship demo end-to-end
 
 ## Phase 9 — Testing and Debugging
-- [ ] Unit tests for `task_classifier`, `model_router`, `retrieve.py`
-- [ ] Manual end-to-end test script for flagship workflow
-- [ ] Edge-case tests: corrupted PDF, empty document, ambiguous task type, sandbox timeout
+- [x] Unit tests for `task_classifier`, `model_router`, `retrieve.py`
+- [x] Manual end-to-end test script for flagship workflow
+- [x] Edge-case tests: corrupted PDF, empty document, ambiguous task type, sandbox timeout
 - [ ] Verify: all tests pass; flagship demo runs 3× consecutively
+  - [x] Automated suite passes: `pytest` → 39 passed (`backend/tests/`)
+  - [ ] Flagship demo 3× consecutively — run `python tests/manual_e2e.py --runs 3` with backend + Ollama live
 
 ## Phase 10 — Deployment
 - [ ] Write `docker-compose.yml` (services: `backend`, `frontend`, `ollama`, `chromadb`)

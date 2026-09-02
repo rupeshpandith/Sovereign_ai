@@ -259,7 +259,22 @@ def _extract_from_pdf_bytes(file_bytes: bytes, filename: str) -> ExtractionResul
     pages: list[PageExtraction] = []
     vision_count = 0
 
-    doc = fitz.open(stream=file_bytes, filetype="pdf")
+    # A corrupted / truncated / non-PDF byte stream makes PyMuPDF raise
+    # (fitz.FileDataError or similar). Treat it as a graceful FAILED result
+    # rather than letting the exception propagate to the caller (Phase 9
+    # edge case: "corrupted PDF").
+    try:
+        doc = fitz.open(stream=file_bytes, filetype="pdf")
+    except Exception as exc:
+        logger.error("EXTRACT_PDF_OPEN_FAILED | file=%s | error=%s", filename, exc)
+        return ExtractionResult(
+            filename=filename,
+            full_text="",
+            error=f"Corrupted or unreadable PDF: {exc}",
+            primary_method=ExtractionMethod.FAILED,
+            latency_ms=round((time.perf_counter() - t0) * 1000, 1),
+        )
+
     for i, page in enumerate(doc, start=1):
         native_text = page.get_text("text").strip()
 
@@ -316,8 +331,18 @@ def _extract_from_image_bytes(file_bytes: bytes, filename: str) -> ExtractionRes
         )
 
     t0 = time.perf_counter()
-    img = Image.open(io.BytesIO(file_bytes))
-    pe = _extract_page_from_pil(img, page_num=1)
+    try:
+        img = Image.open(io.BytesIO(file_bytes))
+        pe = _extract_page_from_pil(img, page_num=1)
+    except Exception as exc:
+        logger.error("EXTRACT_IMAGE_OPEN_FAILED | file=%s | error=%s", filename, exc)
+        return ExtractionResult(
+            filename=filename,
+            full_text="",
+            error=f"Corrupted or unreadable image: {exc}",
+            primary_method=ExtractionMethod.FAILED,
+            latency_ms=round((time.perf_counter() - t0) * 1000, 1),
+        )
     vision_count = 1 if pe.vision_used else 0
 
     return ExtractionResult(
