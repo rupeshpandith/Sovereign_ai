@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(py --version)",
+      "Bash(npm --version)",
+      "Bash(git --version)",
+      "Bash(npm install *)",
+      "Bash(npx tailwindcss *)",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(C:/Programming/SIH/SovereignAI/backend/venv/Scripts/python.exe -m pip install --quiet sqlalchemy && C:/Programming/SIH/SovereignAI/backend/venv/Scripts/python.exe -c \"import sqlalchemy; print\\('sqlalchemy', sqlalchemy.__version__\\)\")",
+      "Bash(PYTHONPATH=C:/Programming/SIH/SovereignAI/backend DATABASE_URL=\"sqlite:///C:/Programming/SIH/SovereignAI/backend/data/app.db\" C:/Programming/SIH/SovereignAI/backend/venv/Scripts/python.exe *)"
+    ]
+  },
+  "enabledPlugins": {
+    "claude-security@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "plugin-dev@claude-plugins-official": true
+  }
+}

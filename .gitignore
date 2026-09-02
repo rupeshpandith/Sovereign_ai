@@ -1,8 +1,11 @@
 # Antigravity / Agents
-.agents/
+.agents/skills/docx
+.agents/skills/pdf
+.agents/skills/pptx
+.agents/skills/xlsx
 external/
-AGENTS.md
-REPO_STATE.md
+# AGENTS.md
+# REPO_STATE.md
 
 # Python / backend
 backend/venv/
